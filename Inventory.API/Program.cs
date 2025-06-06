@@ -1,9 +1,11 @@
+using Inventory.API.Configs;
 using Inventory.Application.Interfaces;
 using Inventory.Application.Services;
 using Inventory.Core.Interfaces;
 using Inventory.Infrastructure.Data;
 using Inventory.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace Inventory.API
 {
@@ -12,10 +14,10 @@ namespace Inventory.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var envName = builder.Environment.EnvironmentName;
             // Add DbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("InventoryDBConnection")));
 
             // Register repositories for dependency injection
             builder.Services.AddScoped<ICarRepository, CarRepository>();
@@ -30,18 +32,20 @@ namespace Inventory.API
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            // Register Swagger generator, defining the version and title.
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", SwaggerConfig.GetOpenApiInfo(envName));
+                c.CustomSchemaIds(type => type.Name);
+            });
+
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
