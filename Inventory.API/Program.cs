@@ -1,3 +1,9 @@
+using Inventory.Application.Interfaces;
+using Inventory.Application.Services;
+using Inventory.Core.Interfaces;
+using Inventory.Infrastructure.Data;
+using Inventory.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventory.API
 {
@@ -6,6 +12,20 @@ namespace Inventory.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Add DbContext
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Register repositories for dependency injection
+            builder.Services.AddScoped<ICarRepository, CarRepository>();
+            builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+            // Register services for dependency injection
+            builder.Services.AddScoped<ICarService, CarService>();
+            builder.Services.AddScoped<ISalesService, SalesService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
 
             // Add services to the container.
 
