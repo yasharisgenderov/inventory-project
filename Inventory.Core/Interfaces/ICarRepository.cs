@@ -14,5 +14,7 @@ namespace Inventory.Core.Interfaces
         Task AddCarAsync(Car car);
         Task UpdateCarAsync(Car car);
         Task DeleteCarAsync(int id);
+        Task<IEnumerable<Car>> FetchSortedCarsAsync(string sortBy = "price", string sortOrder = "asc");
+        Task<IEnumerable<Car>> GetLowStockCarsAsync(int threshold);
     }
 }

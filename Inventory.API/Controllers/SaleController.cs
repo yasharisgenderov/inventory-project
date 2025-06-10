@@ -1,5 +1,6 @@
 ﻿using Inventory.Application.DTOs;
 using Inventory.Application.Interfaces;
+using Inventory.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory.API.Controllers
@@ -62,6 +63,30 @@ namespace Inventory.API.Controllers
         {
             await _salesService.DeleteSaleAsync(id);
             return NoContent();  // Return 204 No Content if the deletion is successful
+        }
+
+        // GET: api/v1/inventory/sales/{customerId}/revenue
+        [HttpGet("{customerId}/revenue")]
+        public async Task<IActionResult> GetTotalRevenueByCustomerId(int customerId)
+        {
+            var totalRevenue = await _salesService.GetTotalRevenueByCustomerIdAsync(customerId);
+            return Ok(totalRevenue);
+        }
+
+        // GET: api/v1/inventory/sales/{customerId}/popular-brand
+        [HttpGet("{customerId}/popular-brand")]
+        public async Task<IActionResult> GetMostPopularCarBrandByCustomerId(int customerId)
+        {
+            var popularBrand = await _salesService.GetMostPopularCarBrandByCustomerIdAsync(customerId);
+            return Ok(popularBrand);
+        }
+
+        // GET: api/v1/inventory/sales/{customerId}/popular-model
+        [HttpGet("{customerId}/popular-model")]
+        public async Task<IActionResult> GetMostPopularCarModelByCustomerId(int customerId)
+        {
+            var popularModel = await _salesService.GetMostPopularCarModelByCustomerIdAsync(customerId);
+            return Ok(popularModel);
         }
     }
 }

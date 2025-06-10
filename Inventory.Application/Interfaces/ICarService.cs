@@ -1,4 +1,5 @@
 ﻿using Inventory.Application.DTOs;
+using Inventory.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace Inventory.Application.Interfaces
         Task AddCarAsync(CarDto car);
         Task UpdateCarAsync(CarDto car);
         Task DeleteCarAsync(int id);
+        Task<IEnumerable<CarDto>> GetSortedCarsAsync(string sortBy = "price", string sortOrder = "asc");
     }
 }

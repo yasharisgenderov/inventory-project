@@ -2,21 +2,18 @@
 using Inventory.Application.Interfaces;
 using Inventory.Core.Entities;
 using Inventory.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Inventory.Application.Services
 {
     public class SalesService : ISalesService
     {
         private readonly ISaleRepository _saleRepository;
+        private readonly ICarRepository _carRepository;
 
-        public SalesService(ISaleRepository saleRepository)
+        public SalesService(ISaleRepository saleRepository, ICarRepository carRepository)
         {
             _saleRepository = saleRepository;
+            _carRepository = carRepository;
         }
 
         public async Task<IEnumerable<SaleDto>> GetAllSalesAsync()
@@ -76,6 +73,34 @@ namespace Inventory.Application.Services
         public async Task DeleteSaleAsync(int id)
         {
             await _saleRepository.DeleteSaleAsync(id);
+        }
+
+        public async Task<decimal> GetTotalRevenueByCustomerIdAsync(int customerId)
+        {
+            var sales = await _saleRepository.GetSalesByCustomerIdAsync(customerId);
+            return sales.Sum(s => s.SalePrice);  // Satış qiymətləri cəmi
+        }
+
+        public async Task<string> GetMostPopularCarBrandByCustomerIdAsync(int customerId)
+        {
+            var sales = await _saleRepository.GetSalesByCustomerIdAsync(customerId);
+            var mostPopularBrand = sales
+                .GroupBy(s => s.Car.Brand)
+                .OrderByDescending(g => g.Count())
+                .FirstOrDefault()?.Key;
+
+            return mostPopularBrand ?? "No data";  // Ən çox satılan marka
+        }
+
+        public async Task<string> GetMostPopularCarModelByCustomerIdAsync(int customerId)
+        {
+            var sales = await _saleRepository.GetSalesByCustomerIdAsync(customerId);
+            var mostPopularModel = sales
+                .GroupBy(s => s.Car.Model)
+                .OrderByDescending(g => g.Count())
+                .FirstOrDefault()?.Key;
+
+            return mostPopularModel ?? "No data";  // Ən çox satılan model
         }
     }
 }

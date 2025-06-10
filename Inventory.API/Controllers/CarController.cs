@@ -10,10 +10,12 @@ namespace Inventory.API.Controllers
     public class CarController : ControllerBase
     {
         private readonly ICarService _carService;
+        private readonly IStockManagementService _stockManagementService;
 
-        public CarController(ICarService carService)
+        public CarController(ICarService carService, IStockManagementService stockManagementService)
         {
             _carService = carService;
+            _stockManagementService = stockManagementService;
         }
 
         // GET: api/Car
@@ -63,6 +65,23 @@ namespace Inventory.API.Controllers
         {
             await _carService.DeleteCarAsync(id);
             return NoContent();  // Return 204 No Content if the deletion is successful
+        }
+
+        // GET: api/v1/inventory/cars?sortBy=price&sortOrder=asc
+        [HttpGet("sorted-cars")]
+        public async Task<IActionResult> GetSortedCars([FromQuery] string sortBy = "price", [FromQuery] string sortOrder = "asc")
+        {
+            // Call the service method to fetch sorted cars
+            var cars = await _carService.GetSortedCarsAsync(sortBy, sortOrder);
+            return Ok(cars);
+        }
+
+        // Stokdan müəyyən sayda avtomobil çıxarmaq
+        [HttpPost("{id}/decrease-stock/{quantity}")]
+        public async Task<IActionResult> DecreaseStock(int id, int quantity)
+        {
+            await _stockManagementService.DecreaseCarStockAsync(id, quantity);
+            return NoContent();  // Yenilənmiş stok barədə müvafiq bildiriş göndəriləcək
         }
     }
 }

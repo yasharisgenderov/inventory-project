@@ -14,5 +14,8 @@ namespace Inventory.Core.Interfaces
         Task AddSaleAsync(Sale sale);
         Task UpdateSaleAsync(Sale sale);
         Task DeleteSaleAsync(int id);
+
+        Task<IEnumerable<Sale>> GetSalesByCustomerIdAsync(int customerId);
+        Task<IEnumerable<Sale>> GetSalesByDateRangeAsync(DateTime startDate, DateTime endDate);
     }
 }

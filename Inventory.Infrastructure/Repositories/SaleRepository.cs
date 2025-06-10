@@ -50,5 +50,23 @@ namespace Inventory.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<IEnumerable<Sale>> GetSalesByCustomerIdAsync(int customerId)
+        {
+            return await _context.Sales
+                .Where(s => s.CustomerId == customerId)
+                .Include(s => s.Car)
+                .Include(s => s.Customer)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Sale>> GetSalesByDateRangeAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _context.Sales
+                .Where(s => s.SaleDate >= startDate && s.SaleDate <= endDate)
+                .Include(s => s.Car)
+                .Include(s => s.Customer)
+                .ToListAsync();
+        }
     }
 }

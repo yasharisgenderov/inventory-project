@@ -29,6 +29,9 @@ namespace Inventory.API
             builder.Services.AddScoped<ISalesService, SalesService>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
 
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<IStockManagementService, StockManagementService>();
+
             // Add services to the container.
 
             builder.Services.AddControllers();

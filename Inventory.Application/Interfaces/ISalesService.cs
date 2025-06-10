@@ -14,5 +14,9 @@ namespace Inventory.Application.Interfaces
         Task AddSaleAsync(SaleDto sale);
         Task UpdateSaleAsync(SaleDto sale);
         Task DeleteSaleAsync(int id);
+
+        Task<decimal> GetTotalRevenueByCustomerIdAsync(int customerId);
+        Task<string> GetMostPopularCarBrandByCustomerIdAsync(int customerId);
+        Task<string> GetMostPopularCarModelByCustomerIdAsync(int customerId);
     }
 }

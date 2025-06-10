@@ -85,5 +85,23 @@ namespace Inventory.Application.Services
         {
             await _carRepository.DeleteCarAsync(id);
         }
+
+        public async Task<IEnumerable<CarDto>> GetSortedCarsAsync(string sortBy = "price", string sortOrder = "asc")
+        {
+            // Delegate the sorting logic to the repository
+            var cars = await _carRepository.FetchSortedCarsAsync(sortBy, sortOrder);
+
+            // Convert the car entities to CarDto
+            return cars.Select(c => new CarDto
+            {
+                Id = c.Id,
+                Brand = c.Brand,
+                Model = c.Model,
+                Year = c.Year,
+                Price = c.Price,
+                StockQuantity = c.StockQuantity,
+                Condition = c.Condition
+            }).ToList();
+        }
     }
 }
