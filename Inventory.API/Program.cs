@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Inventory.API.Configs;
 using Inventory.Application.Interfaces;
 using Inventory.Application.Services;
@@ -32,6 +33,17 @@ namespace Inventory.API
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<IStockManagementService, StockManagementService>();
 
+            // OpenAI açarı konfiqurasiyadan oxunur
+            var apiKey = builder.Configuration["OpenAI:ApiKey"];
+
+            // HttpClient qeydiyyatı
+            builder.Services.AddHttpClient("OpenAI", client =>
+            {
+                client.BaseAddress = new Uri("https://api.openai.com/v1/");
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+            });
+            
             // Add services to the container.
 
             builder.Services.AddControllers();
