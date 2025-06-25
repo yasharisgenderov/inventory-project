@@ -18,8 +18,8 @@ public class RecommendationController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> RecommendAsync([FromBody] UserInputDto input)
     {
-        // var prompt = $"Mənim büdcəm {input.Budget} AZN-dir. Mən {input.Purpose} üçün bir maşın axtarıram. Mənə uyğun maşınlar tövsiyə et. Və əsas məsələ sən bu məlumatları nəyə əsaslanaraq gətirirsən?";
-        var prompt = "Mənim büdcəm 20000 AZN-dir. Mən ofis işləri üçün bir maşın axtarıram. Mənə uyğun maşınlar tövsiyə et. Bu axtarışı edərkən yalnızca azərbaycan bazarını nəzərə al";
+        var prompt = $"Mənim büdcəm {input.Budget} AZN-dir. Mən {input.Purpose} üçün bir maşın axtarıram. Mənə uyğun maşınlar tövsiyə et və bu axtarışı edərkən yalnızca Azərbaycan bazarını nəzərə al";
+        
         var request = new
         {
             model = "gpt-4o",
